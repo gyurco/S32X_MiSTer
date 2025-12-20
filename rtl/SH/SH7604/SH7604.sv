@@ -20,6 +20,7 @@ module SH7604
 	output            CS1_N,
 	output            CS2_N,
 	output            CS3_N,
+	output            RFRSH,
 	output            RD_WR_N,	//WE_N
 	output            CE_N,		//RAS_N
 	output            OE_N,		//CAS_N
@@ -516,6 +517,7 @@ module SH7604
 		.CS1_N(ICS1_N),
 		.CS2_N(ICS2_N),
 		.CS3_N(ICS3_N),
+		.RFRSH(RFRSH),
 		.RD_WR_N(IRD_WR_N),
 		.CE_N(ICE_N),
 		.OE_N(IOE_N),

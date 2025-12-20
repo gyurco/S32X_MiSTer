@@ -441,15 +441,16 @@ module BA
 						mstate <= MBUS_RAM_READ;
 					end
 				end
-				
-			MBUS_RAM_READ: begin
+
+			MBUS_RAM_READ:
+				if (MEM_RDY || !DTACK_N) begin
 					M68K_MBUS_DTACK_N <= ~(msrc == MSRC_M68K);
 					VDP_MBUS_DTACK_N <= ~(msrc == MSRC_VDP);
 					Z80_MBUS_DTACK_N <= ~(msrc == MSRC_Z80);
 					if (msrc == MSRC_M68K && MBUS_RNW) OPEN_BUS <= VDI;
 					mstate <= MBUS_FINISH;
 				end
-				
+
 			MBUS_ROM_WAIT: begin
 				mstate <= rfs_rom_pend ? MBUS_ROM_REFRESH : MBUS_ROM_READ;
 				if (rfs_rom_pend) rfs_rom_pend <= 0;

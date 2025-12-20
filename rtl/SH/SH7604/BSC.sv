@@ -26,6 +26,7 @@ module SH7604_BSC
 	output reg        CS1_N,
 	output reg        CS2_N,
 	output reg        CS3_N,
+	output            RFRSH,
 	output reg        RD_WR_N,
 	output reg        CE_N,		//RAS_N
 	output reg        OE_N,		//CAS_N
@@ -892,6 +893,7 @@ module SH7604_BSC
 	end
 	
 	assign RFS = BUS_STATE == TRFS1 && (RFS_WAIT_CNT == 2'd0 || RFS_WAIT_CNT == 2'd2);
+	assign RFRSH = REFRESH_ACTIVE;
 	
 	wire BUS_END = VBUS_ACTIVE ? !VBUSY :
 	               DBUS_ACTIVE ? !DBUSY && !DBUS_LOCK :

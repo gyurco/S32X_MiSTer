@@ -69,24 +69,24 @@ module sdram
 
 assign SDRAM_nCS = 0;
 assign SDRAM_CKE = 1;
-assign {SDRAM_DQMH,SDRAM_DQML} = SDRAM_A[12:11];
+assign {SDRAM_DQMH,SDRAM_DQML} = dqm;
 
-localparam RASCAS_DELAY   = 3'd2; // tRCD=20ns -> 2 cycles@85MHz
+localparam RASCAS_DELAY   = 3'd3; // tRCD=20ns -> 2 cycles@85MHz
 localparam BURST_LENGTH   = 3'd0; // 0=1, 1=2, 2=4, 3=8, 7=full page
 localparam ACCESS_TYPE    = 1'd0; // 0=sequential, 1=interleaved
-localparam CAS_LATENCY    = 3'd2; // 2/3 allowed
+localparam CAS_LATENCY    = 3'd3; // 2/3 allowed
 localparam OP_MODE        = 2'd0; // only 0 (standard operation) allowed
 localparam NO_WRITE_BURST = 1'd1; // 0=write burst enabled, 1=only single access write
 
 localparam MODE = { 3'b000, NO_WRITE_BURST, OP_MODE, CAS_LATENCY, ACCESS_TYPE, BURST_LENGTH}; 
 
-localparam STATE_IDLE  = 3'd0;             // state to check the requests
+localparam STATE_IDLE  = 4'd0;             // state to check the requests
 localparam STATE_START = STATE_IDLE+1'd1;  // state in which a new command is started
 localparam STATE_CONT  = STATE_START+RASCAS_DELAY;
 localparam STATE_READY = STATE_CONT+CAS_LATENCY+1'd1;
 localparam STATE_LAST  = STATE_READY;      // last state in cycle
 
-reg  [2:0] state;
+reg  [3:0] state;
 reg [22:1] a;
 reg [15:0] data;
 reg        we;
@@ -128,7 +128,7 @@ always @(posedge clk) begin
 			rfs_timer <= RFS_CNT;
 			active <= 0;
 			we <= 0;
-			dqm <= 0;
+			dqm <= 2'b11;
 			state <= STATE_START;
 		end
 		else if (ch_pend[0]) begin
@@ -262,7 +262,7 @@ always @(posedge clk) begin
 	if(mode == MODE_NORMAL) begin
 		casex(state)
 			STATE_START: SDRAM_A <= a[13:1];
-			STATE_CONT:  SDRAM_A <= {dqm, 2'b10, a[22:14]};
+			STATE_CONT:  SDRAM_A <= {4'b0010, a[22:14]};
 		endcase;
 	end
 	else if(mode == MODE_LDM && state == STATE_START) SDRAM_A <= MODE;

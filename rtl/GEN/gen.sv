@@ -119,6 +119,13 @@ module gen
 	input   [1:0] SER_OPT,
 
 	input         MEM_RDY,
+	input  [15:0] WRAM_Q,
+	output [15:1] WRAM_A,
+	output [15:0] WRAM_D,
+	output        WRAM_CS,
+	output        WRAM_LDS,
+	output        WRAM_UDS,
+	output        WRAM_WE,
 
 	input         GG_RESET,
 	input         GG_EN,
@@ -262,8 +269,9 @@ CODES #(.ADDR_WIDTH(24), .DATA_WIDTH(16)) codes (
 //-----------------------------------------------------------------------
 // 68K RAM
 //-----------------------------------------------------------------------
-wire [15:0] WRAM_Q;
 wire        RAM_N;
+/*
+wire [15:0] WRAM_Q;
 
 dpram #(15) ram68k_u
 (
@@ -288,7 +296,13 @@ dpram #(15) ram68k_l
 	.address_b(ram_rst_a[15:1]),
 	.wren_b(LOADING)
 );
-
+*/
+assign WRAM_A = VA[15:1];
+assign WRAM_D = VDO;
+assign WRAM_CS = ~RAM_N;
+assign WRAM_LDS = ~LDS_N;
+assign WRAM_UDS = ~UDS_N;
+assign WRAM_WE = ~RNW;
 
 //--------------------------------------------------------------
 // CPU Z80

@@ -42,6 +42,7 @@ module S32X
 	input      [15:0] SDR_DI,
 	output     [15:0] SDR_DO,
 	output            SDR_CS,
+	output            SDR_RFRSH,
 	output      [1:0] SDR_WE,
 	output            SDR_RD,
 	input             SDR_WAIT,
@@ -110,6 +111,7 @@ module S32X
 	bit         SHCS1_N;
 	bit         SHCS2_N;
 	bit         SHCS3_N;
+	bit         SHRFRSH;
 	bit         SHRD_WR_N;
 	bit   [3:0] SHDQM_N;
 	bit         SHRD_N;
@@ -161,6 +163,7 @@ module S32X
 		.CS1_N(SHCS1_N),
 		.CS2_N(SHCS2_N),
 		.CS3_N(SHCS3_N),
+		.RFRSH(SHRFRSH),
 		.RD_WR_N(SHRD_WR_N),
 		.WE_N(SHDQM_N),
 		.RD_N(SHRD_N),
@@ -355,6 +358,7 @@ module S32X
 	assign SDR_CS = ~SHCS3_N;
 	assign SDR_WE = ~SHDQM_N[1:0];
 	assign SDR_RD = ~SHRD_N;
+	assign SDR_RFRSH = SHRFRSH;
 	
 	assign SHDI = !SHCS3_N ? {16'h0000,SDR_DI} : {16'h0000,IF_DO};
 	assign SHWAIT_N = IF_WAIT_N & ~SDR_WAIT;
