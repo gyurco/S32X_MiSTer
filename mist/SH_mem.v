@@ -55,7 +55,7 @@ module CACHE_TAG (
 	always @(posedge clock)
 		if (wren) mem[wraddress] <= data;
 
-	always @(negedge clock)
+	always @(posedge clock)
 		q <= mem[rdaddress];
 
 endmodule
